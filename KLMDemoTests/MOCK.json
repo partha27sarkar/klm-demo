@@ -1,0 +1,204 @@
+//
+//  MOCK.json
+//  KLMDemoTests
+//
+//  Created by Partha Sarkar on 15/10/2026.
+//
+
+{
+    "count": 36492,
+    "next": "https://api.spaceflightnewsapi.net/v4/articles/?format=api&limit=10&offset=10",
+    "previous": null,
+    "results": [
+        {
+            "id": 40394,
+            "title": "Arianespace Targets 23 Nov Ariane 6 Return Following Reported Turbopump Fix",
+            "authors": [
+                {
+                    "name": "European Spaceflight",
+                    "socials": null
+                }
+            ],
+            "url": "https://europeanspaceflight.com/arianespace-targets-23-nov-ariane-6-return-following-reported-turbopump-fix/",
+            "image_url": "https://europeanspaceflight.com/wp-content/uploads/2026/10/Arianespace-Targets-23-Nov-Ariane-6-Return-Following-Reported-Turbopump-Fix.webp",
+            "news_site": "European Spaceflight",
+            "summary": "Arianespace has announced that the next Ariane 6 launch will take place no earlier than 23 November, marking the rocket’s return to flight after ground testing reportedly revealed an issue with one of its turbopumps. The flight will carry 36 Amazon Leo satellites aboard an Ariane 64, the rocket’s four-booster configuration. It will be the […]\nThe post Arianespace Targets 23 Nov Ariane 6 Return Following Reported Turbopump Fix appeared first on European Spaceflight.",
+            "published_at": "2026-10-15T10:50:18Z",
+            "updated_at": "2026-10-15T11:00:20.877624Z",
+            "featured": false,
+            "launches": [],
+            "events": []
+        },
+        {
+            "id": 40393,
+            "title": "Trace Gas Orbiter — Facts and figures",
+            "authors": [
+                {
+                    "name": "ESA",
+                    "socials": null
+                }
+            ],
+            "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/Trace_Gas_Orbiter_Facts_and_figures",
+            "image_url": "https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2026/10/trace_gas_orbiter_facts_and_figures/27578650-1-eng-GB/Trace_Gas_Orbiter_Facts_and_figures_card_full.png",
+            "news_site": "ESA",
+            "summary": "From the ESA Blogs.",
+            "published_at": "2026-10-15T09:49:00Z",
+            "updated_at": "2026-10-15T10:10:17.434910Z",
+            "featured": false,
+            "launches": [],
+            "events": []
+        },
+        {
+            "id": 40392,
+            "title": "Drilling down for the Moon",
+            "authors": [
+                {
+                    "name": "ESA",
+                    "socials": null
+                }
+            ],
+            "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/Drilling_down_for_the_Moon",
+            "image_url": "https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2026/10/drilling_down_for_the_moon/27577973-1-eng-GB/Drilling_down_for_the_Moon_card_full.jpg",
+            "news_site": "ESA",
+            "summary": "From the ESA Blogs.",
+            "published_at": "2026-10-15T09:24:00Z",
+            "updated_at": "2026-10-15T09:40:17.411089Z",
+            "featured": false,
+            "launches": [],
+            "events": []
+        },
+        {
+            "id": 40391,
+            "title": "Swarming robots to tackle space debris",
+            "authors": [
+                {
+                    "name": "ESA",
+                    "socials": null
+                }
+            ],
+            "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/Swarming_robots_to_tackle_space_debris",
+            "image_url": "https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2026/10/swarming_robots_to_tackle_space_debris/27577419-1-eng-GB/Swarming_robots_to_tackle_space_debris_card_full.jpg",
+            "news_site": "ESA",
+            "summary": "From the ESA Blogs.",
+            "published_at": "2026-10-15T07:50:00Z",
+            "updated_at": "2026-10-15T08:00:43.771648Z",
+            "featured": false,
+            "launches": [],
+            "events": []
+        },
+        {
+            "id": 40390,
+            "title": "APOD: 2026 October 15 – The Milky Way over Manhattan",
+            "authors": [
+                {
+                    "name": "NASA",
+                    "socials": null
+                }
+            ],
+            "url": "https://science.nasa.gov/image-article/apod-2026-october-15-the-milky-way-over-manhattan/",
+            "image_url": "https://assets.science.nasa.gov/dynamicimage/assets/science/cds/apod/apod/2026/october/Manhattan%20Milkyway.jpg",
+            "news_site": "NASA",
+            "summary": "APOD Science APOD APOD: 2026 October 15 – The… Today’s APOD Archive Submissions Index Search Calendar RSS Education About Discuss   APOD Astronomy Picture of the Day Discover the cosmos! Each day a different image or photograph of our fascinating universe is featured, along with a brief explanation written by a professional astronomer. The Milky […]",
+            "published_at": "2026-10-15T04:05:00Z",
+            "updated_at": "2026-10-15T04:50:15.670552Z",
+            "featured": false,
+            "launches": [],
+            "events": []
+        },
+        {
+            "id": 40389,
+            "title": "Fires Arrive in the Amazon Rainforest",
+            "authors": [
+                {
+                    "name": "NASA",
+                    "socials": null
+                }
+            ],
+            "url": "https://science.nasa.gov/earth/earth-observatory/fires-arrive-in-the-amazon-rainforest/",
+            "image_url": "https://assets.science.nasa.gov/dynamicimage/assets/science/esd/eo/images/iotd/2026/fires-arrive-in-the-amazon-rainforest/amazofires_amo_20261012.jpg",
+            "news_site": "NASA",
+            "summary": "During El Niño, a cascade of fires across the tropics begins in equatorial Asia and continues in the central and eastern Amazon.",
+            "published_at": "2026-10-15T04:01:00Z",
+            "updated_at": "2026-10-15T04:40:09.858819Z",
+            "featured": false,
+            "launches": [],
+            "events": []
+        },
+        {
+            "id": 40388,
+            "title": "Artemis III SLS teams prepare short stack for pad tanking test",
+            "authors": [
+                {
+                    "name": "Chris Bergin",
+                    "socials": null
+                }
+            ],
+            "url": "https://www.nasaspaceflight.com/2026/10/artemis-iii-teams-prepare-short-stack-tanking-test/",
+            "image_url": "https://www.nasaspaceflight.com/wp-content/uploads/2026/10/NSF-2026-10-14-23-01-17-060.jpg",
+            "news_site": "NASASpaceflight",
+            "summary": "With both solid rocket boosters fully stacked and all four RS-25 engines now installed on…\nThe post Artemis III SLS teams prepare short stack for pad tanking test appeared first on NASASpaceFlight.com.",
+            "published_at": "2026-10-14T22:36:14Z",
+            "updated_at": "2026-10-14T22:40:15.127510Z",
+            "featured": false,
+            "launches": [],
+            "events": []
+        },
+        {
+            "id": 40387,
+            "title": "NASA to Host News Conference Previewing US Spacewalks 100, 101",
+            "authors": [
+                {
+                    "name": "NASA",
+                    "socials": null
+                }
+            ],
+            "url": "https://www.nasa.gov/news-release/nasa-to-host-news-conference-previewing-us-spacewalks-100-101/",
+            "image_url": "https://images-assets.nasa.gov/image/iss075e0011109/iss075e0011109~large.jpg",
+            "news_site": "NASA",
+            "summary": "NASA will preview two upcoming spacewalks to complete solar array installation and power augmentation of the International Space Station during a news conference at 2 p.m. EDT, Tuesday, Oct. 20, from NASA’s Johnson Space Center in Houston. NASA will stream the event through a variety of platforms. Learn where to watch online: https://www.nasa.gov/live NASA participants […]",
+            "published_at": "2026-10-14T20:13:29Z",
+            "updated_at": "2026-10-14T20:20:08.674083Z",
+            "featured": false,
+            "launches": [],
+            "events": []
+        },
+        {
+            "id": 40386,
+            "title": "NASA Astronauts to Answer Questions from Florida Students",
+            "authors": [
+                {
+                    "name": "NASA",
+                    "socials": null
+                }
+            ],
+            "url": "https://www.nasa.gov/learning-resources/nasa-astronauts-to-answer-questions-from-florida-students/",
+            "image_url": "https://www.nasa.gov/wp-content/uploads/2026/10/florida-student-downlink-oct-14.jpg",
+            "news_site": "NASA",
+            "summary": "Students in Florida will hear from NASA astronauts Jessica Watkins and Luke Delaney as they answer prerecorded STEM questions while aboard the International Space Station. The Earth-to-space call will begin at 12 p.m. EDT Friday, Oct. 16, and will stream live on the agency’s Learn With NASA YouTube channel. This event is hosted by Sally Ride Elementary School […]",
+            "published_at": "2026-10-14T19:12:51Z",
+            "updated_at": "2026-10-14T19:20:08.072074Z",
+            "featured": false,
+            "launches": [],
+            "events": []
+        },
+        {
+            "id": 40385,
+            "title": "NASA’s Chandra Breaks Down ‘Treble Clef’s’ Galaxy Cluster Collision",
+            "authors": [
+                {
+                    "name": "NASA",
+                    "socials": null
+                }
+            ],
+            "url": "https://science.nasa.gov/missions/chandra/nasas-chandra-breaks-down-treble-clefs-galaxy-cluster-collision/",
+            "image_url": "https://assets.science.nasa.gov/dynamicimage/assets/science/missions/chandra/2026/trebleclef.jpg",
+            "news_site": "NASA",
+            "summary": "Astronomers have used NASA’s Chandra X-ray Observatory to break down the cause of a remarkable formation of radio waves they have nicknamed the “Treble Clef” because its distinct shape strongly resembles the musical symbol. The researchers discovered the Treble Clef is likely caused by an outburst from a supermassive black hole, followed by a collision […]",
+            "published_at": "2026-10-14T16:46:58Z",
+            "updated_at": "2026-10-14T17:40:11.302220Z",
+            "featured": false,
+            "launches": [],
+            "events": []
+        }
+    ]
+}
