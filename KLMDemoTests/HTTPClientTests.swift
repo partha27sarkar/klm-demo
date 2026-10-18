@@ -2,6 +2,7 @@ import Foundation
 import Testing
 @testable import KLMDemo
 
+@MainActor
 struct HTTPClientTests {
     @Test
     func `GET decodes the mock feed asynchronously`() async throws {

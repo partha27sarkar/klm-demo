@@ -2,6 +2,7 @@ import Foundation
 import Testing
 @testable import KLMDemo
 
+@MainActor
 struct ArticleListErrorTests {
     @Test(arguments: [
         (HTTPError.statusCode(401), "Article information is currently unavailable."),

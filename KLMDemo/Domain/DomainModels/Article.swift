@@ -7,7 +7,7 @@
 
 import Foundation
 
-nonisolated struct Article: Identifiable, Equatable, Sendable {
+struct Article: Identifiable, Equatable, Sendable {
     let id: Int
     let title: String
     let authors: [String]

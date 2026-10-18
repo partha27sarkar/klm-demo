@@ -3,6 +3,7 @@ import Testing
 
 struct ArticleDTOTests {
     @Test
+    @MainActor
     func `Mock feed decodes and maps every article`() throws {
         let response = try TestFixture.mockResponse()
         let articles = response.results.map { $0.mappingDomainModel() }

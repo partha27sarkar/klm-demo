@@ -14,10 +14,12 @@ enum TestFixture {
         return Data(data[jsonStart...])
     }
 
+    @MainActor
     static func mockResponse() throws -> ArticleListResponseDTO {
         try JSONDecoder().decode(ArticleListResponseDTO.self, from: mockData())
     }
 
+    @MainActor
     static func mockArticles() throws -> [Article] {
         try mockResponse().results.map { $0.mappingDomainModel() }
     }
@@ -61,7 +63,7 @@ struct StubHTTPClient: HTTPClient {
     let data: Data?
     let error: TestError?
 
-    nonisolated init(data: Data? = nil, error: TestError? = nil) {
+    init(data: Data? = nil, error: TestError? = nil) {
         self.data = data
         self.error = error
     }

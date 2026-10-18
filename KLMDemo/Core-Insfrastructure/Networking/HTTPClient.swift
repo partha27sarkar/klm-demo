@@ -9,8 +9,8 @@ import Foundation
 
 protocol HTTPRequestOperation {
     associatedtype Response
-    nonisolated var request: URLRequest { get }
-    nonisolated func decodeResponse(from data: Data) throws -> Response
+    var request: URLRequest { get }
+    func decodeResponse(from data: Data) throws -> Response
 }
 
 protocol HTTPClient: Sendable {
@@ -29,44 +29,44 @@ extension HTTPClient {
 
 struct URLSessionHTTPClient: HTTPClient {
     private let session: URLSession
-
+    
     init(session: URLSession = .shared) {
         self.session = session
     }
-
+    
     func execute<Operation: HTTPRequestOperation>(
         _ operation: Operation
     ) async throws -> Operation.Response {
         let (data, response) = try await session.data(for: operation.request)
-
+        
         guard let response = response as? HTTPURLResponse else {
             throw HTTPError.invalidResponse
         }
-
+        
         guard 200..<300 ~= response.statusCode else {
             throw HTTPError.statusCode(response.statusCode)
         }
-
+        
         return try operation.decodeResponse(from: data)
     }
 }
 
 struct JSONGetOperation<Response: Decodable>: HTTPRequestOperation {
-    nonisolated let request: URLRequest
-
-    nonisolated init(url: URL, headers: [String: String] = [:]) {
+    let request: URLRequest
+    
+    init(url: URL, headers: [String: String] = [:]) {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.timeoutInterval = 30
-
+        
         for (field, value) in headers {
             request.setValue(value, forHTTPHeaderField: field)
         }
-
+        
         self.request = request
     }
-
-    nonisolated func decodeResponse(from data: Data) throws -> Response {
+    
+    func decodeResponse(from data: Data) throws -> Response {
         do {
             return try JSONDecoder().decode(Response.self, from: data)
         } catch {
@@ -76,21 +76,21 @@ struct JSONGetOperation<Response: Decodable>: HTTPRequestOperation {
 }
 
 struct DataGetOperation: HTTPRequestOperation {
-    nonisolated let request: URLRequest
-
-    nonisolated init(url: URL, headers: [String: String] = [:]) {
+    let request: URLRequest
+    
+    init(url: URL, headers: [String: String] = [:]) {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.timeoutInterval = 30
-
+        
         for (field, value) in headers {
             request.setValue(value, forHTTPHeaderField: field)
         }
-
+        
         self.request = request
     }
-
-    nonisolated func decodeResponse(from data: Data) throws -> Data {
+    
+    func decodeResponse(from data: Data) throws -> Data {
         data
     }
 }

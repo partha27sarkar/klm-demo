@@ -7,7 +7,7 @@
 
 import Foundation
 
-nonisolated enum ArticleListError {
+enum ArticleListError {
     case network
     case server
     case invalidData
