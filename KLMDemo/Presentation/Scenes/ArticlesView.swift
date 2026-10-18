@@ -1,42 +1,47 @@
-//
-//  ArticlesView.swift
-//  KLMDemo
-//
-//  Created by Partha Sarkar on 15/10/2026.
-//
-
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ArticlesView: View {
     @Bindable var viewModel: ArticlesViewModel
+    let imageCache: ImageDataCache
 
     var body: some View {
         NavigationStack {
-            content
-                .navigationTitle("All News Articles")
+            ArticleListContent(viewModel: viewModel, imageCache: imageCache)
+            .navigationTitle("All News Articles")
         }
         .task {
             await viewModel.loadArticles()
         }
     }
+}
 
-    @ViewBuilder
-    private var content: some View {
+private struct ArticleListContent: View {
+    @Bindable var viewModel: ArticlesViewModel
+    let imageCache: ImageDataCache
+
+    var body: some View {
         switch viewModel.state {
         case .idle, .loading:
             ProgressView("Loading articles…")
-        case let .loaded(articles):
-            List(articles) { article in
-                NavigationLink {
-                    ArticleDetailView(article: article)
-                } label: {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(article.title)
-                            .font(.headline)
-                        Text(article.newsSite)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+        case .loaded:
+            VStack(spacing: 0) {
+                AppSearchView(
+                    searchQuery: $viewModel.searchText,
+                    showsFavoritesOnly: $viewModel.showsFavoritesOnly
+                )
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+
+                if viewModel.visibleArticles.isEmpty, !viewModel.searchText.isEmpty {
+                    ContentUnavailableView.search(text: viewModel.searchText)
+                } else {
+                    List(viewModel.visibleArticles) { article in
+                        ArticleRow(
+                            article: article,
+                            viewModel: viewModel,
+                            imageCache: imageCache
+                        )
                     }
                 }
             }
@@ -56,20 +61,80 @@ struct ArticlesView: View {
     }
 }
 
+private struct ArticleRow: View {
+    let article: Article
+    let viewModel: ArticlesViewModel
+    let imageCache: ImageDataCache
+
+    var body: some View {
+        HStack(spacing: 12) {
+            NavigationLink {
+                ArticleDetailView(
+                    article: article,
+                    viewModel: viewModel,
+                    imageCache: imageCache
+                )
+            } label: {
+                HStack(spacing: 12) {
+                    ArticleImageView(
+                        imageURL: article.imageURL,
+                        imageCache: imageCache
+                    )
+                    .frame(width: 84, height: 84)
+
+                    ArticleRowText(
+                        title: article.title,
+                        newsSite: article.newsSite
+                    )
+                }
+            }
+            .buttonStyle(.plain)
+
+            Button {
+                viewModel.toggleFavorite(for: article.id)
+            } label: {
+                Image(systemName: article.favorite ? "heart.fill" : "heart")
+                    .foregroundStyle(article.favorite ? .red : .secondary)
+                    .imageScale(.large)
+            }
+            .buttonStyle(.borderless)
+        }
+        .padding(.vertical, 4)
+    }
+}
+
+private struct ArticleRowText: View {
+    let title: String
+    let newsSite: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.headline)
+                .lineLimit(3)
+
+            Text(newsSite)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+    }
+}
+
 #Preview {
+    let container = try! ModelContainer(
+        for: ArticleRecord.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+
     ArticlesView(
         viewModel: ArticlesViewModel(
             fetchArticlesRequest: FetchArticlesRequest(
                 repository: ArticleRepository(
                     httpClient: URLSessionHTTPClient(),
-                    store: SwiftDataArticleStore(
-                        container: try! ModelContainer(
-                            for: ArticleRecord.self,
-                            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-                        )
-                    )
+                    store: SwiftDataArticleStore(container: container)
                 )
             )
-        )
+        ),
+        imageCache: ImageDataCache()
     )
 }

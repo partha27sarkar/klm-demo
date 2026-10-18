@@ -3,7 +3,6 @@ import SwiftData
 
 @main
 struct KLMDemoApp: App {
-
     private let dependencies: AppDependencies
 
     init() {
@@ -16,7 +15,10 @@ struct KLMDemoApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ArticlesView(viewModel: dependencies.articlesViewModel)
+            ArticlesView(
+                viewModel: dependencies.articlesViewModel,
+                imageCache: dependencies.imageCache
+            )
         }
         .modelContainer(dependencies.modelContainer)
     }

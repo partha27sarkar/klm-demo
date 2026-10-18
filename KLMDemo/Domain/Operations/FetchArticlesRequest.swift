@@ -17,4 +17,12 @@ struct FetchArticlesRequest {
     func execute() async throws -> [Article] {
         try await repository.fetchArticles()
     }
+    
+    /// Set Favorite dunny 
+    /// - Parameters:
+    ///   - featured: <#featured description#>
+    ///   - articleID: <#articleID description#>
+    func setFavorite(_ favorite: Bool, for articleID: Int) throws {
+        try repository.setFavorite(favorite, for: articleID)
+    }
 }

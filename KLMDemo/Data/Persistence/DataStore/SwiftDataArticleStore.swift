@@ -1,10 +1,3 @@
-//
-//  SwiftDataArticleStore.swift
-//  KLMDemo
-//
-//  Created by Partha Sarkar on 15/10/2026.
-//
-
 import Foundation
 import SwiftData
 
@@ -25,14 +18,20 @@ final class SwiftDataArticleStore {
     }
 
     func replaceArticles(with articles: [Article]) throws {
-        let existing = try context.fetch(FetchDescriptor<ArticleRecord>())
+        let existingRecords = try context.fetch(FetchDescriptor<ArticleRecord>())
+        let recordsByID = Dictionary(uniqueKeysWithValues: existingRecords.map { ($0.id, $0) })
         let incomingIDs = Set(articles.map(\.id))
 
-        for record in existing where !incomingIDs.contains(record.id) {
+        for record in existingRecords where !incomingIDs.contains(record.id) {
             context.delete(record)
         }
+
         for article in articles {
-            context.insert(ArticleRecord(article))
+            if let existingRecord = recordsByID[article.id] {
+                existingRecord.update(from: article)
+            } else {
+                context.insert(ArticleRecord(article))
+            }
         }
 
         try context.save()
@@ -51,7 +50,19 @@ final class SwiftDataArticleStore {
         try context.save()
     }
 
-    // MARK: - Private Helpers
+    func setFeatured(_ featured: Bool, for articleID: Int) throws {
+        guard let record = try record(for: articleID) else { return }
+        record.favorite = featured
+        try context.save()
+    }
+
+    private func record(for articleID: Int) throws -> ArticleRecord? {
+        var descriptor = FetchDescriptor<ArticleRecord>(
+            predicate: #Predicate { $0.id == articleID }
+        )
+        descriptor.fetchLimit = 1
+        return try context.fetch(descriptor).first
+    }
 
     private func updateAndInsert(_ article: Article, existingRecord: ArticleRecord?) {
         if let existingRecord {
@@ -61,8 +72,6 @@ final class SwiftDataArticleStore {
         }
     }
 }
-
-// MARK: - ArticleRecord Mapping Helpers
 
 private extension ArticleRecord {
     convenience init(_ article: Article) {
@@ -75,7 +84,8 @@ private extension ArticleRecord {
             newsSite: article.newsSite,
             summary: article.summary,
             publishedAt: article.publishedAt,
-            updatedAt: article.updatedAt
+            updatedAt: article.updatedAt,
+            favorite: article.favorite
         )
     }
 

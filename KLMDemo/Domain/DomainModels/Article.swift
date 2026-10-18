@@ -17,4 +17,5 @@ struct Article: Identifiable, Equatable, Sendable {
     let summary: String
     let publishedAt: String
     let updatedAt: String
+    var favorite: Bool = false
 }

@@ -19,6 +19,7 @@ final class ArticleRecord {
     var summary: String
     var publishedAt: String
     var updatedAt: String
+    var favorite: Bool = false
 
     init(
         id: Int,
@@ -30,6 +31,7 @@ final class ArticleRecord {
         summary: String,
         publishedAt: String,
         updatedAt: String,
+        favorite: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -40,11 +42,11 @@ final class ArticleRecord {
         self.summary = summary
         self.publishedAt = publishedAt
         self.updatedAt = updatedAt
+        self.favorite = favorite
     }
-    
+
     func toDomain() -> Article {
-        //let authors = authors.map{$0.name}
-        return Article(
+        Article(
             id: id,
             title: title,
             authors: authorNames,
@@ -53,7 +55,8 @@ final class ArticleRecord {
             newsSite: newsSite,
             summary: summary,
             publishedAt: publishedAt,
-            updatedAt: updatedAt
+            updatedAt: updatedAt,
+            favorite: favorite
         )
     }
 }

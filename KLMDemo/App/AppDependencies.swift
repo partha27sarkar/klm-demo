@@ -12,6 +12,7 @@ final class AppDependencies {
     let modelContainer: ModelContainer
     let articlesRepository: ArticleRepository
     let articlesViewModel: ArticlesViewModel
+    let imageCache: ImageDataCache
 
     init() throws {
         let schema = Schema([
@@ -39,5 +40,6 @@ final class AppDependencies {
                 repository: articlesRepository
             )
         )
+        imageCache = ImageDataCache()
     }
 }

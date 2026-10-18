@@ -19,6 +19,10 @@ final class ArticleRepository: ArticleRepositoryProtocol {
         self.store = store
     }
 
+    func setFavorite(_ favorite: Bool, for articleID: Int) throws {
+        try store.setFeatured(favorite, for: articleID)
+    }
+
     func fetchArticles() async throws -> [Article] {
         do {
             let response = try await httpClient.get(
@@ -33,7 +37,9 @@ final class ArticleRepository: ArticleRepositoryProtocol {
 
             try store.replaceArticles(with: articles)
 
-            return articles
+            // Return SwiftData's merged records so locally stored values such as
+            // favorites win over API defaults.
+            return try store.fetchArticles()
         } catch {
             let cachedArticles = try store.fetchArticles()
 

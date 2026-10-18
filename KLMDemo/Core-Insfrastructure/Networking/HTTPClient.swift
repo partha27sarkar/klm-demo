@@ -7,12 +7,70 @@
 
 import Foundation
 
+protocol HTTPRequestOperation {
+    associatedtype Response
+
+    var request: URLRequest { get }
+
+    func decodeResponse(from data: Data) throws -> Response
+}
+
+struct JSONGetOperation<Response: Decodable>: HTTPRequestOperation {
+    let request: URLRequest
+
+    init(url: URL, headers: [String: String] = [:]) {
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 30
+
+        for (field, value) in headers {
+            request.setValue(value, forHTTPHeaderField: field)
+        }
+
+        self.request = request
+    }
+
+    func decodeResponse(from data: Data) throws -> Response {
+        do {
+            return try JSONDecoder().decode(Response.self, from: data)
+        } catch {
+            throw HTTPError.decodingFailed(error)
+        }
+    }
+}
+
+struct DataGetOperation: HTTPRequestOperation {
+    let request: URLRequest
+
+    init(url: URL, headers: [String: String] = [:]) {
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 30
+
+        for (field, value) in headers {
+            request.setValue(value, forHTTPHeaderField: field)
+        }
+
+        self.request = request
+    }
+
+    func decodeResponse(from data: Data) throws -> Data {
+        data
+    }
+}
+
 protocol HTTPClient: Sendable {
+    func execute<Operation: HTTPRequestOperation>(_ operation: Operation) async throws -> Operation.Response
+}
+
+extension HTTPClient {
     func get<T: Decodable>(
         _ type: T.Type,
         from url: URL,
-        headers: [String: String]
-    ) async throws -> T
+        headers: [String: String] = [:]
+    ) async throws -> T {
+        try await execute(JSONGetOperation<T>(url: url, headers: headers))
+    }
 }
 
 struct URLSessionHTTPClient: HTTPClient {
@@ -22,20 +80,10 @@ struct URLSessionHTTPClient: HTTPClient {
         self.session = session
     }
 
-    func get<T: Decodable>(
-        _ type: T.Type,
-        from url: URL,
-        headers: [String: String] = [:]
-    ) async throws -> T {
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.timeoutInterval = 30
-
-        for (field, value) in headers {
-            request.setValue(value, forHTTPHeaderField: field)
-        }
-
-        let (data, response) = try await session.data(for: request)
+    func execute<Operation: HTTPRequestOperation>(
+        _ operation: Operation
+    ) async throws -> Operation.Response {
+        let (data, response) = try await session.data(for: operation.request)
 
         guard let response = response as? HTTPURLResponse else {
             throw HTTPError.invalidResponse
@@ -45,10 +93,6 @@ struct URLSessionHTTPClient: HTTPClient {
             throw HTTPError.statusCode(response.statusCode)
         }
 
-        do {
-            return try JSONDecoder().decode(T.self, from: data)
-        } catch {
-            throw HTTPError.decodingFailed(error)
-        }
+        return try operation.decodeResponse(from: data)
     }
 }
