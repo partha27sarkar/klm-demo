@@ -1,3 +1,10 @@
+//
+//  ArticlesView.swift
+//  KLMDemo
+//
+//  Created by Partha Sarkar on 15/10/2026.
+//
+
 import SwiftData
 import SwiftUI
 
@@ -93,8 +100,8 @@ private struct ArticleRow: View {
             Button {
                 viewModel.toggleFavorite(for: article.id)
             } label: {
-                Image(systemName: article.favorite ? "heart.fill" : "heart")
-                    .foregroundStyle(article.favorite ? .red : .secondary)
+                Image(systemName: article.isFavorite ? "heart.fill" : "heart")
+                    .foregroundStyle(article.isFavorite ? .red : .secondary)
                     .imageScale(.large)
             }
             .buttonStyle(.borderless)

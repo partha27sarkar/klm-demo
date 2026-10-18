@@ -9,54 +9,8 @@ import Foundation
 
 protocol HTTPRequestOperation {
     associatedtype Response
-
-    var request: URLRequest { get }
-
-    func decodeResponse(from data: Data) throws -> Response
-}
-
-struct JSONGetOperation<Response: Decodable>: HTTPRequestOperation {
-    let request: URLRequest
-
-    init(url: URL, headers: [String: String] = [:]) {
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.timeoutInterval = 30
-
-        for (field, value) in headers {
-            request.setValue(value, forHTTPHeaderField: field)
-        }
-
-        self.request = request
-    }
-
-    func decodeResponse(from data: Data) throws -> Response {
-        do {
-            return try JSONDecoder().decode(Response.self, from: data)
-        } catch {
-            throw HTTPError.decodingFailed(error)
-        }
-    }
-}
-
-struct DataGetOperation: HTTPRequestOperation {
-    let request: URLRequest
-
-    init(url: URL, headers: [String: String] = [:]) {
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.timeoutInterval = 30
-
-        for (field, value) in headers {
-            request.setValue(value, forHTTPHeaderField: field)
-        }
-
-        self.request = request
-    }
-
-    func decodeResponse(from data: Data) throws -> Data {
-        data
-    }
+    nonisolated var request: URLRequest { get }
+    nonisolated func decodeResponse(from data: Data) throws -> Response
 }
 
 protocol HTTPClient: Sendable {
@@ -94,5 +48,49 @@ struct URLSessionHTTPClient: HTTPClient {
         }
 
         return try operation.decodeResponse(from: data)
+    }
+}
+
+struct JSONGetOperation<Response: Decodable>: HTTPRequestOperation {
+    nonisolated let request: URLRequest
+
+    nonisolated init(url: URL, headers: [String: String] = [:]) {
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 30
+
+        for (field, value) in headers {
+            request.setValue(value, forHTTPHeaderField: field)
+        }
+
+        self.request = request
+    }
+
+    nonisolated func decodeResponse(from data: Data) throws -> Response {
+        do {
+            return try JSONDecoder().decode(Response.self, from: data)
+        } catch {
+            throw HTTPError.decodingFailed(error)
+        }
+    }
+}
+
+struct DataGetOperation: HTTPRequestOperation {
+    nonisolated let request: URLRequest
+
+    nonisolated init(url: URL, headers: [String: String] = [:]) {
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 30
+
+        for (field, value) in headers {
+            request.setValue(value, forHTTPHeaderField: field)
+        }
+
+        self.request = request
+    }
+
+    nonisolated func decodeResponse(from data: Data) throws -> Data {
+        data
     }
 }

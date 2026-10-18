@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Article: Identifiable, Equatable, Sendable {
+nonisolated struct Article: Identifiable, Equatable, Sendable {
     let id: Int
     let title: String
     let authors: [String]
@@ -17,5 +17,7 @@ struct Article: Identifiable, Equatable, Sendable {
     let summary: String
     let publishedAt: String
     let updatedAt: String
-    var favorite: Bool = false
+    /// `isFavorite` is a demo-only preference because the API does not provide a
+    /// per-user favorite status. It is preserved when article data is refreshed.
+    var isFavorite: Bool = false
 }

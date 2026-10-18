@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ArticleListError {
+nonisolated enum ArticleListError {
     case network
     case server
     case invalidData
@@ -29,7 +29,7 @@ enum ArticleListError {
         }
     }
 
-    static func from(_ error: Error) -> ArticleListError {
+    static func map(_ error: Error) -> ArticleListError {
         if let httpError = error as? HTTPError {
             switch httpError {
             case .statusCode(401...499):

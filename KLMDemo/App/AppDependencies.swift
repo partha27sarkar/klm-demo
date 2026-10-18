@@ -5,6 +5,7 @@
 //  Created by Partha Sarkar on 15/10/2026.
 //
 
+import Foundation
 import SwiftData
 
 @MainActor
@@ -18,15 +19,19 @@ final class AppDependencies {
         let schema = Schema([
             ArticleRecord.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let applicationSupportURL = try FileManager.default.url(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        )
+        let storeURL = applicationSupportURL.appending(path: "KLMDemo.store")
+        let modelConfiguration = ModelConfiguration(schema: schema, url: storeURL)
 
-        modelContainer = {
-            do {
-                return try ModelContainer(for: schema, configurations: [modelConfiguration])
-            } catch {
-                fatalError("Could not create ModelContainer: \(error)")
-            }
-        }()
+        modelContainer = try ModelContainer(
+            for: schema,
+            configurations: [modelConfiguration]
+        )
 
         let httpClient = URLSessionHTTPClient()
         let articleStore = SwiftDataArticleStore(container: modelContainer)

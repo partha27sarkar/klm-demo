@@ -9,4 +9,5 @@ import Foundation
 
 protocol ArticleRepositoryProtocol: AnyObject {
     func fetchArticles() async throws -> [Article]
+    func setFavorite(_ isFavorite: Bool, for articleID: Int) throws
 }

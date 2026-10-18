@@ -8,9 +8,9 @@
 import Foundation
 
 struct FetchArticlesRequest {
-    private let repository: ArticleRepository
+    private let repository: any ArticleRepositoryProtocol
 
-    init(repository: ArticleRepository) {
+    init(repository: any ArticleRepositoryProtocol) {
         self.repository = repository
     }
 
@@ -18,10 +18,6 @@ struct FetchArticlesRequest {
         try await repository.fetchArticles()
     }
     
-    /// Set Favorite dunny 
-    /// - Parameters:
-    ///   - featured: <#featured description#>
-    ///   - articleID: <#articleID description#>
     func setFavorite(_ favorite: Bool, for articleID: Int) throws {
         try repository.setFavorite(favorite, for: articleID)
     }

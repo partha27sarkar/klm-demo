@@ -1,3 +1,10 @@
+//
+//  ArticleDetailView.swift
+//  KLMDemo
+//
+//  Created by Partha Sarkar on 15/10/2026.
+//
+
 import SwiftUI
 
 struct ArticleDetailView: View {
@@ -53,8 +60,8 @@ struct ArticleDetailView: View {
                 Button {
                     viewModel.toggleFavorite(for: displayedArticle.id)
                 } label: {
-                    Image(systemName: displayedArticle.favorite ? "heart.fill" : "heart")
-                        .foregroundStyle(displayedArticle.favorite ? .red : .primary)
+                    Image(systemName: displayedArticle.isFavorite ? "heart.fill" : "heart")
+                        .foregroundStyle(displayedArticle.isFavorite ? .red : .primary)
                 }
             }
         }

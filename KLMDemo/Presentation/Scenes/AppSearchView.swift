@@ -1,3 +1,10 @@
+//
+//  AppSearchView.swift
+//  KLMDemo
+//
+//  Created by Partha Sarkar on 17/10/2026.
+//
+
 import SwiftUI
 
 struct AppSearchView: View {
@@ -21,7 +28,6 @@ struct AppSearchView: View {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(.secondary)
                     }
-                    .accessibilityLabel("Clear search")
                 }
             }
             .padding(12)
@@ -35,8 +41,6 @@ struct AppSearchView: View {
                     .frame(width: 44, height: 44)
                     .background(.fill.tertiary, in: Circle())
             }
-            .accessibilityLabel("Show favorites only")
-            .accessibilityValue(showsFavoritesOnly ? "On" : "Off")
         }
     }
 }

@@ -1,3 +1,10 @@
+//
+//  SwiftDataArticleStore.swift
+//  KLMDemo
+//
+//  Created by Partha Sarkar on 15/10/2026.
+//
+
 import Foundation
 import SwiftData
 
@@ -13,7 +20,6 @@ final class SwiftDataArticleStore {
         let descriptor = FetchDescriptor<ArticleRecord>(
             sortBy: [SortDescriptor(\.id, order: .reverse)]
         )
-
         return try context.fetch(descriptor).map { $0.toDomain() }
     }
 
@@ -28,7 +34,7 @@ final class SwiftDataArticleStore {
 
         for article in articles {
             if let existingRecord = recordsByID[article.id] {
-                existingRecord.update(from: article)
+                existingRecord.updateFieldsFromRemote(from: article)
             } else {
                 context.insert(ArticleRecord(article))
             }
@@ -50,9 +56,10 @@ final class SwiftDataArticleStore {
         try context.save()
     }
 
-    func setFeatured(_ featured: Bool, for articleID: Int) throws {
+    /// Stores the demo-only favorite preference on this device.
+    func setFavoriteLocally(_ isFavorite: Bool, for articleID: Int) throws {
         guard let record = try record(for: articleID) else { return }
-        record.favorite = featured
+        record.isFavorite = isFavorite
         try context.save()
     }
 
@@ -66,7 +73,7 @@ final class SwiftDataArticleStore {
 
     private func updateAndInsert(_ article: Article, existingRecord: ArticleRecord?) {
         if let existingRecord {
-            existingRecord.update(from: article)
+            existingRecord.updateFieldsFromRemote(from: article)
         } else {
             context.insert(ArticleRecord(article))
         }
@@ -85,11 +92,12 @@ private extension ArticleRecord {
             summary: article.summary,
             publishedAt: article.publishedAt,
             updatedAt: article.updatedAt,
-            favorite: article.favorite
+            isFavorite: article.isFavorite
         )
     }
 
-    func update(from article: Article) {
+    /// Updates fields sourced from the API without overwriting `isFavorite`.
+    func updateFieldsFromRemote(from article: Article) {
         title = article.title
         authorNames = article.authors
         url = article.url

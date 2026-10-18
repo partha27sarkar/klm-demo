@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+/// The locally persisted representation of an article.
 @Model
 final class ArticleRecord {
     @Attribute(.unique) var id: Int
@@ -19,7 +20,9 @@ final class ArticleRecord {
     var summary: String
     var publishedAt: String
     var updatedAt: String
-    var favorite: Bool = false
+    /// `isFavorite` is a demo-only preference because the API does not provide a
+    /// per-user favorite status. It is preserved when article data is refreshed.
+    var isFavorite: Bool = false
 
     init(
         id: Int,
@@ -31,7 +34,7 @@ final class ArticleRecord {
         summary: String,
         publishedAt: String,
         updatedAt: String,
-        favorite: Bool = false
+        isFavorite: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -42,7 +45,7 @@ final class ArticleRecord {
         self.summary = summary
         self.publishedAt = publishedAt
         self.updatedAt = updatedAt
-        self.favorite = favorite
+        self.isFavorite = isFavorite
     }
 
     func toDomain() -> Article {
@@ -56,7 +59,7 @@ final class ArticleRecord {
             summary: summary,
             publishedAt: publishedAt,
             updatedAt: updatedAt,
-            favorite: favorite
+            isFavorite: isFavorite
         )
     }
 }

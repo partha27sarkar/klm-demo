@@ -1,3 +1,10 @@
+//
+//  ArticlesViewModel.swift
+//  KLMDemo
+//
+//  Created by Partha Sarkar on 15/10/2026.
+//
+
 import Foundation
 import Observation
 
@@ -43,7 +50,7 @@ final class ArticlesViewModel {
             state = .loaded(articles)
             updateVisibleArticles(from: articles)
         } catch {
-            state = .failed(ArticleListError.from(error))
+            state = .failed(ArticleListError.map(error))
             visibleArticles = []
         }
     }
@@ -58,11 +65,11 @@ final class ArticlesViewModel {
             return
         }
 
-        let favorite = !articles[index].favorite
+        let favorite = !articles[index].isFavorite
 
         do {
             try fetchArticlesRequest.setFavorite(favorite, for: articleID)
-            articles[index].favorite = favorite
+            articles[index].isFavorite = favorite
             state = .loaded(articles)
             updateVisibleArticles(from: articles)
         } catch {
@@ -100,7 +107,7 @@ final class ArticlesViewModel {
                 article.summary
             ].contains { $0.localizedCaseInsensitiveContains(query) }
 
-            return matchesSearch && (!showsFavoritesOnly || article.favorite)
+            return matchesSearch && (!showsFavoritesOnly || article.isFavorite)
         }
     }
 }

@@ -7,9 +7,10 @@
 
 import Foundation
 
+/// Retrieves articles from the API and maintains their local SwiftData cache.
 final class ArticleRepository: ArticleRepositoryProtocol {
     private let store: SwiftDataArticleStore
-    let httpClient: HTTPClient
+    private let httpClient: HTTPClient
 
     init(
         httpClient: HTTPClient,
@@ -19,8 +20,12 @@ final class ArticleRepository: ArticleRepositoryProtocol {
         self.store = store
     }
 
-    func setFavorite(_ favorite: Bool, for articleID: Int) throws {
-        try store.setFeatured(favorite, for: articleID)
+    /// Persists a demo-only favorite preference on the device.
+    ///
+    /// The Spaceflight News API does not expose a user favourite field, so this
+    /// preference intentionally remains local rather than being sent to the API.
+    func setFavorite(_ isFavorite: Bool, for articleID: Int) throws {
+        try store.setFavoriteLocally(isFavorite, for: articleID)
     }
 
     func fetchArticles() async throws -> [Article] {
@@ -37,8 +42,8 @@ final class ArticleRepository: ArticleRepositoryProtocol {
 
             try store.replaceArticles(with: articles)
 
-            // Return SwiftData's merged records so locally stored values such as
-            // favorites win over API defaults.
+            // Fetch the merged records so local preferences, including
+            // `isFavorite`, are retained while API-sourced fields are refreshed.
             return try store.fetchArticles()
         } catch {
             let cachedArticles = try store.fetchArticles()

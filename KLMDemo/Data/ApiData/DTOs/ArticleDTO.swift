@@ -5,19 +5,19 @@
 
 import Foundation
 
-struct ArticleListResponseDTO: Decodable {
+nonisolated struct ArticleListResponseDTO: Decodable {
     let count: Int
     let next: String?
     let previous: String?
     let results: [ArticleDTO]
 }
 
-struct AuthorDTO: Decodable {
+nonisolated struct AuthorDTO: Decodable {
     let name: String
     let socials: [String: String?]?
 }
 
-struct ArticleDTO: Decodable {
+nonisolated struct ArticleDTO: Decodable {
     let id: Int
     let title: String
     let authors: [AuthorDTO]

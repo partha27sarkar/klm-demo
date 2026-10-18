@@ -2,19 +2,27 @@
 //  ArticleImageView.swift
 //  KLMDemo
 //
+//  Created by Partha Sarkar on 16/10/2026.
+//
 
-import ImageIO
 import SwiftUI
 import UIKit
 
 @MainActor
 struct ArticleImageView: View {
+    private enum LoadingPhase {
+        case checkingCache
+        case downloading
+        case loaded
+        case failed
+    }
+    
     let imageURL: String
     let imageCache: ImageDataCache
     let contentMode: ContentMode
 
     @State private var image: UIImage?
-    @State private var loadFailed = false
+    @State private var phase: LoadingPhase = .checkingCache
 
     init(
         imageURL: String,
@@ -32,12 +40,12 @@ struct ArticleImageView: View {
                 Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: contentMode)
-            } else if loadFailed {
+            } else if phase == .failed {
                 placeholder(systemImage: "photo")
+            } else if phase == .downloading {
+                ShimmeringImagePlaceholder()
             } else {
-                ProgressView()
-                    .controlSize(.regular)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                Color.secondary.opacity(0.08)
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -48,41 +56,39 @@ struct ArticleImageView: View {
 
     private func loadImage() async {
         image = nil
-        loadFailed = false
+        phase = .checkingCache
 
         guard let url = normalizedURL else {
-            loadFailed = true
+            phase = .failed
             return
         }
 
         if let cachedData = await imageCache.data(for: url),
            let cachedImage = ImageDecoder.image(from: cachedData) {
             image = cachedImage
+            phase = .loaded
             return
         }
 
+        phase = .downloading
+
         do {
             let downloadedData = try await URLSessionHTTPClient().execute(
-                DataGetOperation(
-                    url: url,
-                    headers: [
-                        "Accept": "image/*,*/*;q=0.8",
-                        "User-Agent": "KLMDemo/1.0"
-                    ]
-                )
+                DataGetOperation(url: url)
             )
 
             guard let downloadedImage = ImageDecoder.image(from: downloadedData) else {
-                loadFailed = true
+                phase = .failed
                 return
             }
 
             await imageCache.insert(downloadedData, for: url)
             image = downloadedImage
+            phase = .loaded
         } catch is CancellationError {
             return
         } catch {
-            loadFailed = true
+            phase = .failed
         }
     }
 
@@ -93,15 +99,30 @@ struct ArticleImageView: View {
             return nil
         }
 
-        if let url = URL(string: trimmedURLString) {
-            return url
-        }
-
         let encodedURLString = trimmedURLString.addingPercentEncoding(
             withAllowedCharacters: .urlFragmentAllowed
         )
+        let url = URL(string: trimmedURLString)
+            ?? encodedURLString.flatMap(URL.init(string:))
 
-        return encodedURLString.flatMap(URL.init(string:))
+        guard let url,
+              var components = URLComponents(
+                url: url,
+                resolvingAgainstBaseURL: false
+              ) else {
+            return nil
+        }
+
+        switch components.scheme?.lowercased() {
+        case "http":
+            components.scheme = "https"
+        case "https":
+            break
+        default:
+            return nil
+        }
+
+        return components.url
     }
 
     private func placeholder(systemImage: String) -> some View {
