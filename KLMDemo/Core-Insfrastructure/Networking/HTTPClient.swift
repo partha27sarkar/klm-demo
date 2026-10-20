@@ -78,10 +78,14 @@ struct JSONGetOperation<Response: Decodable>: HTTPRequestOperation {
 struct DataGetOperation: HTTPRequestOperation {
     let request: URLRequest
     
-    init(url: URL, headers: [String: String] = [:]) {
+    init(
+        url: URL,
+        headers: [String: String] = [:],
+        timeoutInterval: TimeInterval = 30
+    ) {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.timeoutInterval = 30
+        request.timeoutInterval = timeoutInterval
         
         for (field, value) in headers {
             request.setValue(value, forHTTPHeaderField: field)

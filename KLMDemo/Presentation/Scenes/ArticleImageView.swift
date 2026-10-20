@@ -14,8 +14,15 @@ struct ArticleImageView: View {
         case checkingCache
         case downloading
         case loaded
+        case timedOut
         case failed
     }
+
+    private enum ImageLoadingError: Error {
+        case timedOut
+    }
+
+    private static let imageRequestTimeout: Duration = .seconds(8)
     
     let imageURL: String
     let imageCache: ImageDataCache
@@ -35,22 +42,28 @@ struct ArticleImageView: View {
     }
 
     var body: some View {
-        Group {
-            if let image {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: contentMode)
-            } else if phase == .failed {
-                placeholder(systemImage: "photo")
-            } else if phase == .downloading {
+        imageContent
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .task(id: imageURL) {
+                await loadImage()
+            }
+    }
+
+    @ViewBuilder
+    private var imageContent: some View {
+        if let image {
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: contentMode)
+        } else {
+            switch phase {
+            case .downloading:
                 ShimmeringImagePlaceholder()
-            } else {
+            case .timedOut, .failed:
+                placeholder
+            case .checkingCache, .loaded:
                 Color.secondary.opacity(0.08)
             }
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .task(id: imageURL) {
-            await loadImage()
         }
     }
 
@@ -65,17 +78,25 @@ struct ArticleImageView: View {
 
         if let cachedData = await imageCache.data(for: url),
            let cachedImage = ImageDecoder.image(from: cachedData) {
+            guard !Task.isCancelled else {
+                return
+            }
+
             image = cachedImage
             phase = .loaded
+            return
+        }
+
+        guard !Task.isCancelled else {
             return
         }
 
         phase = .downloading
 
         do {
-            let downloadedData = try await URLSessionHTTPClient().execute(
-                DataGetOperation(url: url)
-            )
+            let downloadedData = try await downloadImageData(from: url)
+
+            try Task.checkCancellation()
 
             guard let downloadedImage = ImageDecoder.image(from: downloadedData) else {
                 phase = .failed
@@ -83,12 +104,47 @@ struct ArticleImageView: View {
             }
 
             await imageCache.insert(downloadedData, for: url)
+            try Task.checkCancellation()
+
             image = downloadedImage
             phase = .loaded
         } catch is CancellationError {
             return
+        } catch ImageLoadingError.timedOut {
+            phase = .timedOut
+        } catch let error as URLError where error.code == .timedOut {
+            phase = .timedOut
         } catch {
+            guard !Task.isCancelled else {
+                return
+            }
+
             phase = .failed
+        }
+    }
+
+    private func downloadImageData(from url: URL) async throws -> Data {
+        try await withThrowingTaskGroup(of: Data.self) { group in
+            group.addTask {
+                try await URLSessionHTTPClient().execute(
+                    DataGetOperation(url: url)
+                )
+            }
+
+            group.addTask {
+                try await Task.sleep(for: Self.imageRequestTimeout)
+                throw ImageLoadingError.timedOut
+            }
+
+            defer {
+                group.cancelAll()
+            }
+
+            guard let data = try await group.next() else {
+                throw CancellationError()
+            }
+
+            return data
         }
     }
 
@@ -125,8 +181,8 @@ struct ArticleImageView: View {
         return components.url
     }
 
-    private func placeholder(systemImage: String) -> some View {
-        Image(systemName: systemImage)
+    private var placeholder: some View {
+        Image(systemName: "photo")
             .font(.title2)
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
