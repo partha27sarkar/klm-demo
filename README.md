@@ -1,4 +1,6 @@
-KLMDemo
+
+
+# KLMDemo
 
 An iOS SwiftUI demo app that displays spaceflight news articles from the [Spaceflight News API](https://api.spaceflightnewsapi.net/v4/articles/).
 
@@ -21,11 +23,12 @@ Before running the app on a physical iPhone or iPad, open the app target’s **S
 - View article details and images.
 - Mark articles as favourites and filter the list to show favourites only.
 - Cache fetched articles locally with SwiftData for offline fallback.
-- Support iPhone and iPad layouts.
-  
+
+
+## Public API content disclaimer
+This demo displays third-party content supplied by the public Spaceflight News API. Some articles may contain incomplete or incorrectly formatted text, and linked images may be unavailable, fail to load, or appear corrupted. Content quality and image availability depend on the API and the original publishers.
 
 ## Architecture
-
 The project separates responsibilities into the following layers:
 
 - **Presentation** — SwiftUI scenes and observable view models.
