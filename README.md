@@ -21,6 +21,7 @@ Before running the app on a physical iPhone or iPad, open the app target’s **S
 - View article details and images.
 - Mark articles as favourites and filter the list to show favourites only.
 - Cache fetched articles locally with SwiftData for offline fallback.
+- Support iPhone and iPad layouts.
   
 
 ## Architecture
