@@ -11,6 +11,8 @@ struct AppSearchView: View {
     @Binding var searchQuery: String
     @Binding var showsFavoritesOnly: Bool
 
+    @FocusState private var isSearchFocused: Bool
+
     var body: some View {
         HStack(spacing: 8) {
             HStack(spacing: 10) {
@@ -18,12 +20,19 @@ struct AppSearchView: View {
                     .foregroundStyle(.secondary)
 
                 TextField("Search articles", text: $searchQuery)
+                    .focused($isSearchFocused)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
+                    .task(id: searchQuery) {
+                        if searchQuery.isEmpty {
+                            isSearchFocused = false
+                        }
+                    }
 
                 if !searchQuery.isEmpty {
                     Button {
                         searchQuery = ""
+                        isSearchFocused = false
                     } label: {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(.secondary)
@@ -42,5 +51,22 @@ struct AppSearchView: View {
                     .background(.fill.tertiary, in: Circle())
             }
         }
+    }
+}
+
+#Preview {
+    AppSearchPreview()
+}
+
+private struct AppSearchPreview: View {
+    @State private var searchQuery = ""
+    @State private var showsFavoritesOnly = false
+
+    var body: some View {
+        AppSearchView(
+            searchQuery: $searchQuery,
+            showsFavoritesOnly: $showsFavoritesOnly
+        )
+        .padding()
     }
 }
