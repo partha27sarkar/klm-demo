@@ -1,4 +1,4 @@
-# KLMDemo : Recomended use the **[main](https://github.com/partha27sarkar/klm-demo.git)** repo.
+# KLMDemo : Recommended to use the **[main](https://github.com/partha27sarkar/klm-demo.git)** repo.
 
 An iOS SwiftUI demo app that displays spaceflight news articles from the [Spaceflight News API](https://api.spaceflightnewsapi.net/v4/articles/). Please use the **[main](https://github.com/partha27sarkar/klm-demo.git)** repo.
 
